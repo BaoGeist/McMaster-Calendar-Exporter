@@ -30,12 +30,12 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="w-full max-w-md">
+    <main className="flex min-h-screen flex-col items-center justify-center p-8">
+      <div className="w-full max-w-md flex flex-col items-center justify-center">
         <h1 className="text-2xl font-bold mb-4 text-center">Create Calendar</h1>
         <textarea
-          className="w-full p-2 border border-gray-300 rounded mb-4"
-          placeholder="Enter calendar information here..."
+          className="p-2 border border-gray-300 rounded mb-4 h-[400px] w-[800px]"
+          placeholder="Copy and paste calendar information here..."
           value={calendarInfo}
           onChange={(e) => setCalendarInfo(e.target.value)}
         />

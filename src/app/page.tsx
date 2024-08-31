@@ -16,13 +16,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabaseBrowser } from "./lib/browser";
-import { User } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 import LogoutButton from "./LogoutButton";
 import { Textarea } from "@/components/ui/textarea";
+import { handleAddToCalendar } from "./lib/handleAddToCalendar";
 
 type TCourse = {
   name: string;
-  startData: string;
+  startDate: string;
   endDate: string;
   startTime: string;
   endTime: string;
@@ -33,10 +34,52 @@ type TCourse = {
 
 const Homepage = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
+  const [session, setSession] = useState<Session | undefined>(undefined);
   const [text, setText] = useState("");
-  const [courses, setCourses] = useState("");
+  const [courses, setCourses] = useState<TCourse[]>([]);
 
-  useEffect(() => {}, [text]);
+  useEffect(() => {
+    const parseCoursesData = (data: string) => {
+      if (!data) return;
+      const lines = data.trim().split("\n");
+
+      if (lines.length % 8 !== 0) {
+        console.error("Invalid input: Number of lines is not a multiple of 7");
+        return null;
+      }
+      const newCourses: TCourse[] = [];
+
+      for (let i = 0; i < lines.length; i += 8) {
+        const [
+          name,
+          startDate,
+          startTime,
+          endTime,
+          endDate,
+          frequency,
+          location,
+          exportStr,
+        ] = lines.slice(i, i + 8);
+
+        const course: TCourse = {
+          name: name.trim(),
+          startDate: startDate.trim(),
+          endDate: endDate.trim(),
+          startTime: startTime.trim(),
+          endTime: endTime.trim(),
+          frequency: frequency.trim().split(" "),
+          location: location.trim(),
+          export: true,
+        };
+
+        newCourses.push(course);
+      }
+
+      setCourses(newCourses);
+    };
+
+    parseCoursesData(text);
+  }, [text]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -50,6 +93,7 @@ const Homepage = () => {
       } else {
         console.log(session);
         setUser(session?.session?.user);
+        setSession(session?.session ?? undefined);
       }
     };
 
@@ -58,9 +102,17 @@ const Homepage = () => {
 
   console.log(user);
   console.log(text);
+  console.log("COURSES: ", courses);
 
   return (
     <div className="flex flex-col items-center">
+      <button
+        onClick={() =>
+          handleAddToCalendar(session?.provider_token ?? "", "123456789876543")
+        }
+      >
+        add to calendar
+      </button>
       <main className="mt-16 w-[1000px] mb-16">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           <span className="text-primary">McMaster</span> Schedule{" "}

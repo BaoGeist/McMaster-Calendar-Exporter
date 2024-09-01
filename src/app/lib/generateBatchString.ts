@@ -1,12 +1,38 @@
-import { TCourse } from "../page";
+import { addDays, format, isValid, parse } from "date-fns";
+import { TCourse } from "../HomePage";
+import { setCourseTimes } from "./setCourseTimes";
 
 export function generateBatchString(
   courses: TCourse[],
   authToken: string
 ): string {
+  const coursesFixed = setCourseTimes(courses);
   let batchString = "";
   const batchBoundary = "batch123456789876543";
   let batchCount = 0;
+
+  function convertDateAndAddDay(dateStr: string): string | null {
+    // Define the input format and output format
+    const inputFormat = "dd/MM/yyyy";
+    const outputFormat = "yyyyMMdd";
+
+    // Parse the input date string
+    const parsedDate = parse(dateStr, inputFormat, new Date());
+
+    // Check if the parsed date is valid
+    if (!isValid(parsedDate)) {
+      console.error("Invalid date:", dateStr);
+      return null; // Or handle the error as needed
+    }
+
+    // Add one day to the parsed date
+    const newDate = addDays(parsedDate, 1);
+
+    // Format the new date to the desired output format
+    const formattedDate = format(newDate, outputFormat);
+
+    return formattedDate;
+  }
 
   // Helper function to format date and time
   const formatDateTime = (date: string, time: string) => {
@@ -31,6 +57,43 @@ export function generateBatchString(
     )}T${hours.padStart(2, "0")}:${minutes}:00-04:00`;
   };
 
+  function parseTimeToString(timeString: string): string {
+    const [time, period] = timeString.split(/([APM]{2})/);
+    const [hours, minutes] = time.split(":").map(Number);
+    let hours24 = hours;
+
+    if (period === "PM" && hours < 12) {
+      hours24 += 12;
+    } else if (period === "AM" && hours === 12) {
+      hours24 = 0;
+    }
+    return `${hours24.toString().padStart(2, "0")}${minutes
+      .toString()
+      .padStart(2, "0")}00`;
+  }
+
+  // Function to append time to each date string
+  function appendTimeToDates(dateStr: string, startTime: string): string {
+    const timeString = parseTimeToString(startTime);
+
+    // Split the input dates by comma
+    const dates = dateStr.split(",");
+
+    // Append time to each date
+    const formattedDates = dates.map((date) => {
+      // Parse date and format with time
+      const parsedDate = parse(date, "yyyyMMdd", new Date());
+      if (!isValid(parsedDate)) {
+        console.error("Invalid date:", date);
+        return date;
+      }
+      return `${format(parsedDate, "yyyyMMdd")}T${timeString}`;
+    });
+
+    // Return the dates joined by commas
+    return formattedDates.join(",");
+  }
+
   // Helper function to format day abbreviations
   const formatDay = (day: string) => {
     const dayMap: { [key: string]: string } = {
@@ -45,7 +108,7 @@ export function generateBatchString(
     return dayMap[day] || day;
   };
 
-  for (const course of courses) {
+  for (const course of coursesFixed) {
     batchString += `--${batchBoundary}\n`;
     batchString += "Content-Type: application/http\n";
     batchString += "Content-Transfer-Encoding: binary\n";
@@ -67,7 +130,7 @@ export function generateBatchString(
 
     const eventData = {
       summary: course.name,
-      location: course.location,
+      location: course.location.replace("_", " "),
       extendedProperties: {
         private: {
           owner: "McMaster University",
@@ -82,11 +145,13 @@ export function generateBatchString(
         timeZone: "America/New_York",
       },
       recurrence: [
-        `RRULE:FREQ=WEEKLY;UNTIL=${course.endDate
-          .split("/")
-          .reverse()
-          .join("")};BYDAY=${course.frequency.map(formatDay).join(",")}`,
-        "EXDATE;TZID=America/New_York:20241230T173000,20241231T173000,20240101T173000,20240219T173000,20240220T173000,20240221T173000,20240222T173000,20240223T173000,20240329T173000,20240520T173000,20240701T173000,20240805T173000,20240902T173000,20241014T173000,20241015T173000,20241016T173000,20241017T173000,20241018T173000,20241225T173000,20241226T173000,20241227T173000,20221230T173000",
+        `RRULE:FREQ=WEEKLY;UNTIL=${convertDateAndAddDay(
+          course.endDate
+        )};BYDAY=${course.frequency.map(formatDay).join(",")}`,
+        `EXDATE;TZID=America/New_York:${appendTimeToDates(
+          "20241230,20241231,20240101,20240219,20240220,20240221,20240222,20240223,20240329,20240520,20240701,20240805,20240902,20241014,20241015,20241016,20241017,20241018,20241225,20241226,20241227,20221230",
+          course.startTime
+        )}`,
       ],
       reminders: {
         useDefault: false,

@@ -1,6 +1,6 @@
 // import { getBatchString } from "./getBatchString";
 
-import { TCourse } from "../page";
+import { TCourse } from "../HomePage";
 import { generateBatchString } from "./generateBatchString";
 
 export async function handleAddToCalendar(
@@ -19,8 +19,6 @@ export async function handleAddToCalendar(
     },
     body: await generateBatchString(courses, authToken),
   };
-
-  console.log("fetchOptions", fetchOptions);
 
   try {
     const response = await fetch(

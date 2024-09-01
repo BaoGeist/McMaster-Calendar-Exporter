@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { supabaseBrowser } from "./lib/browser";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 type LoginButtonProps = {
   className?: string;
@@ -16,7 +17,7 @@ const LoginButton = ({ className }: LoginButtonProps) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://www.mac2cal.com/" + "/",
+        redirectTo: window.location.origin + "/",
         scopes: "https://www.googleapis.com/auth/calendar",
       },
     });

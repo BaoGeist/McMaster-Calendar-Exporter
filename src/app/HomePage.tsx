@@ -23,6 +23,7 @@ import { useCourseContext } from "./context/CourseContext";
 import { Toggle } from "../components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@radix-ui/react-label";
+import CoursesTable from "./CoursesTable";
 
 export type TCourse = {
   name: string;
@@ -110,7 +111,7 @@ const Homepage = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <main className="mt-16 w-[1000px] mb-16">
+      <main className="mt-16 max-w-[1000px] mx-4 mb-16">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           <span className="text-primary">McMaster</span> Schedule{" "}
           <span className="text-xl text-primary">2</span> Google Calendar
@@ -223,9 +224,11 @@ const Homepage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <CoursesTable />
             <CalendarButton
               authToken={session?.provider_token ?? ""}
               isNotificationsEnabled={isNotificationsEnabled}
+              className="text-wrap"
             />
           </CardContent>
         </Card>

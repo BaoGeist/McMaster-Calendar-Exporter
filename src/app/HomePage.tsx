@@ -20,6 +20,9 @@ import { supabaseBrowser } from "./lib/browser";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 import { useCourseContext } from "./context/CourseContext";
+import { Toggle } from "../components/ui/toggle";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@radix-ui/react-label";
 
 export type TCourse = {
   name: string;
@@ -38,6 +41,11 @@ const Homepage = () => {
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [text, setText] = useState("");
   const { courses, setCourses } = useCourseContext();
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
+
+  const handleToggle = () => {
+    setIsNotificationsEnabled(!isNotificationsEnabled);
+  };
 
   useEffect(() => {
     const parseCoursesData = (data: string) => {
@@ -111,7 +119,8 @@ const Homepage = () => {
         <p className="text-lg mt-4">
           Copying your course schedule to Google Calendar through the Reddit
           link is broken. Not sure when theyre going to fix it but this is an
-          alternative until that works again.
+          alternative until that works again. If you are having issues, sign out
+          and sign back in again.
         </p>
 
         <Card className="mt-8">
@@ -151,13 +160,20 @@ const Homepage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>Card Content</p>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="notifications"
+                checked={isNotificationsEnabled}
+                onCheckedChange={handleToggle}
+              />
+              <Label htmlFor="notifications">Enable Notifications</Label>
+            </div>
           </CardContent>
         </Card>
 
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Step 3: Copy Paste Courses</CardTitle>
+            <CardTitle>Step 3: Copy & Paste Courses</CardTitle>
             <CardDescription>
               Go to the{" "}
               <Button variant="link" className="p-0 h-fit">
@@ -203,7 +219,7 @@ const Homepage = () => {
         <Card className="mt-8">
           <CardHeader>
             <CardTitle>
-              Step 4: Confirm and copy your schedule to Google calendar
+              Step 4: Confirm and copy your schedule to Google Calendar
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -213,7 +229,7 @@ const Homepage = () => {
 
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Step 5: Sign out of google calendar</CardTitle>
+            <CardTitle>Step 5: Sign out of Google Calendar</CardTitle>
           </CardHeader>
           <CardContent>
             <LogoutButton setSession={setUser} />

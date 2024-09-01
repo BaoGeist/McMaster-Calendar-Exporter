@@ -4,7 +4,8 @@ import { setCourseTimes } from "./setCourseTimes";
 
 export function generateBatchString(
   courses: TCourse[],
-  authToken: string
+  authToken: string,
+  isNotificationsEnabled: boolean
 ): string {
   const coursesFixed = setCourseTimes(courses);
   let batchString = "";
@@ -175,7 +176,7 @@ export function generateBatchString(
         )}`,
       ],
       reminders: {
-        useDefault: false,
+        useDefault: isNotificationsEnabled,
       },
       colorId: getColorId(extractSectionCode(course.name)![0]), // Cycles through colorIds 1-11
     };

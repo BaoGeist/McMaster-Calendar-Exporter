@@ -6,7 +6,8 @@ import { generateBatchString } from "./generateBatchString";
 export async function handleAddToCalendar(
   authToken: string,
   batchBoundary: string,
-  courses: TCourse[]
+  courses: TCourse[],
+  isNotificationsEnabled: boolean
 ) {
   const fetchOptions = {
     method: "POST",

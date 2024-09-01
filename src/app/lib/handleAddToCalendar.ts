@@ -18,7 +18,7 @@ export async function handleAddToCalendar(
       Accept: "*/*",
       Connection: "keep-alive",
     },
-    body: await generateBatchString(courses, authToken),
+    body: await generateBatchString(courses, authToken, isNotificationsEnabled),
   };
 
   try {

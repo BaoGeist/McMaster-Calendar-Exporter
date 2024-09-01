@@ -129,12 +129,7 @@ const Homepage = () => {
           P.s. This app is still getting approved so you will get a warning when
           signing in with Google. You can continue by clicking advanced and
           continuing with Google. You could also wait until the app is approved,
-          or check out the <br />
-          <br />
-          P.s.s. Double check the imported calendar afterwards as there seems to
-          be some classes that are shifted forward by an hour for some reason.
-          You can manually fix this in your calendar by moving it and applying
-          the edit to all events/
+          or check out the{" "}
           <Link
             target="_blank"
             className="text-primary hover:underline"
@@ -143,6 +138,12 @@ const Homepage = () => {
             code here
           </Link>{" "}
           if you are still unsure.
+          <br />
+          <br />
+          P.s.s. Double check the imported calendar afterwards as there seems to
+          be some classes that are shifted forward by an hour for some reason.
+          You can manually fix this in your calendar by moving it and applying
+          the edit to all events/
         </p>
 
         <Card className="mt-8">

@@ -108,6 +108,27 @@ export function generateBatchString(
     return dayMap[day] || day;
   };
 
+  function extractSectionCode(courseName: string) {
+    // The regular expression looks for 'C', 'T', or 'L' followed by two digits
+    const sectionCodeMatch = courseName.match(/\b[CTL]\d{2}\b/);
+
+    // If a match is found, return it; otherwise, return null or a default value
+    return sectionCodeMatch ? sectionCodeMatch[0] : null;
+  }
+
+  const getColorId = (courseType: string): number => {
+    switch (courseType) {
+      case "T":
+        return 4;
+      case "C":
+        return 9;
+      case "L":
+        return 5;
+      default:
+        return 0; // Default colorId if courseType is not T, C, or L
+    }
+  };
+
   for (const course of coursesFixed) {
     batchString += `--${batchBoundary}\n`;
     batchString += "Content-Type: application/http\n";
@@ -156,7 +177,7 @@ export function generateBatchString(
       reminders: {
         useDefault: false,
       },
-      colorId: ((batchCount % 11) + 1).toString(), // Cycles through colorIds 1-11
+      colorId: getColorId(extractSectionCode(course.name)![0]), // Cycles through colorIds 1-11
     };
 
     batchString += JSON.stringify(eventData);

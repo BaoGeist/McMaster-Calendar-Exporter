@@ -143,7 +143,7 @@ const Homepage = () => {
           P.s.s. Double check the imported calendar afterwards as there seems to
           be some classes that are shifted forward by an hour for some reason.
           You can manually fix this in your calendar by moving it and applying
-          the edit to all events/
+          the edit to all events.
         </p>
 
         <Card className="mt-8">

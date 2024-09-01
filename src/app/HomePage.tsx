@@ -223,7 +223,10 @@ const Homepage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CalendarButton authToken={session?.provider_token ?? ""} />
+            <CalendarButton
+              authToken={session?.provider_token ?? ""}
+              isNotificationsEnabled={isNotificationsEnabled}
+            />
           </CardContent>
         </Card>
 

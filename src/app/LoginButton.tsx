@@ -16,7 +16,7 @@ const LoginButton = ({ className }: LoginButtonProps) => {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: location.origin + "/",
+        redirectTo: "https://www.mac2cal.com/" + "/",
         scopes: "https://www.googleapis.com/auth/calendar",
       },
     });

@@ -17,7 +17,7 @@ const LogoutButton = () => {
     }
   };
 
-  return <Button onClick={handleLogout}>Log into Google</Button>;
+  return <Button onClick={handleLogout}>Log out of Google</Button>;
 };
 
 export default LogoutButton;

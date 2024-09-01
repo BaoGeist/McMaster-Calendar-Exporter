@@ -20,8 +20,10 @@ import { Session, User } from "@supabase/supabase-js";
 import LogoutButton from "./LogoutButton";
 import { Textarea } from "@/components/ui/textarea";
 import { handleAddToCalendar } from "./lib/handleAddToCalendar";
+import { Calendar } from "lucide-react";
+import CalendarButton from "./CalendarButton";
 
-type TCourse = {
+export type TCourse = {
   name: string;
   startDate: string;
   endDate: string;
@@ -91,7 +93,6 @@ const Homepage = () => {
       if (error) {
         console.error("Error getting session:", error);
       } else {
-        console.log(session);
         setUser(session?.session?.user);
         setSession(session?.session ?? undefined);
       }
@@ -100,19 +101,10 @@ const Homepage = () => {
     checkSession();
   }, []);
 
-  console.log(user);
-  console.log(text);
-  console.log("COURSES: ", courses);
+  console.log(courses);
 
   return (
     <div className="flex flex-col items-center">
-      <button
-        onClick={() =>
-          handleAddToCalendar(session?.provider_token ?? "", "123456789876543")
-        }
-      >
-        add to calendar
-      </button>
       <main className="mt-16 w-[1000px] mb-16">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           <span className="text-primary">McMaster</span> Schedule{" "}
@@ -218,7 +210,10 @@ const Homepage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p>Card Content</p>
+            <CalendarButton
+              courses={courses}
+              authToken={session?.provider_token ?? ""}
+            />
           </CardContent>
         </Card>
 

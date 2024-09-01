@@ -1,13 +1,13 @@
-import { getBatchString } from "./getBatchString";
+// import { getBatchString } from "./getBatchString";
+
+import { TCourse } from "../page";
+import { generateBatchString } from "./generateBatchString";
 
 export async function handleAddToCalendar(
   authToken: string,
-  batchBoundary: string
+  batchBoundary: string,
+  courses: TCourse[]
 ) {
-  console.log("called");
-
-  const bodyContent = getBatchString();
-
   const fetchOptions = {
     method: "POST",
     headers: {
@@ -17,7 +17,7 @@ export async function handleAddToCalendar(
       Accept: "*/*",
       Connection: "keep-alive",
     },
-    body: bodyContent.trim(),
+    body: await generateBatchString(courses, authToken),
   };
 
   console.log("fetchOptions", fetchOptions);

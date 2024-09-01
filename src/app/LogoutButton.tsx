@@ -4,16 +4,19 @@ import React, { useState } from "react";
 import { supabaseBrowser } from "./lib/browser";
 import { Button } from "@/components/ui/button";
 
-const LogoutButton = () => {
+type LogoutButtonProps = {
+  setSession: (session: any) => void;
+};
+
+const LogoutButton = ({ setSession }: LogoutButtonProps) => {
   const supabase = supabaseBrowser();
-  const [session, setSession] = useState<any>(undefined);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error logging out:", error.message);
     } else {
-      setSession(null); // Reset session state
+      setSession(undefined); // Reset session state
     }
   };
 

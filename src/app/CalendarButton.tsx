@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { supabaseBrowser } from "./lib/browser";
 import { Button } from "@/components/ui/button";
-import { handleAddToCalendar } from "./lib/handleAddToCalendar";
-import { TCourse } from "./HomePage";
 import { useCourseContext } from "./context/CourseContext";
+import { handleAddToCalendar } from "./lib/handleAddToCalendar";
 
 type CalendarButtonProps = {
   authToken: string;
@@ -20,7 +17,7 @@ const CalendarButton = ({ authToken, className }: CalendarButtonProps) => {
       onClick={() => handleAddToCalendar(authToken, "123", courses)}
       className={className ?? ""}
     >
-      Log into Google
+      Copy your schedule to Google Calendar
     </Button>
   );
 };

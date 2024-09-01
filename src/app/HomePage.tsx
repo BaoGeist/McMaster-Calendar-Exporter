@@ -216,7 +216,7 @@ const Homepage = () => {
             <CardTitle>Step 5: Sign out of google calendar</CardTitle>
           </CardHeader>
           <CardContent>
-            <LogoutButton></LogoutButton>
+            <LogoutButton setSession={setUser} />
           </CardContent>
         </Card>
       </main>

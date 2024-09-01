@@ -38,12 +38,20 @@ function formatTime(date: Date): string {
   return format(date, "h:mma");
 }
 
-function parseDateString(dateString: string): Date {
-  const [day, month, year] = dateString.split("/").map(Number);
+function parseDateString(dateString: string, inENCA: boolean): Date {
+  let day: number, month: number, year: number;
+
+  if (inENCA) {
+    // If inENCA is true, use "day/month/year" format
+    [day, month, year] = dateString.split("/").map(Number);
+  } else {
+    // If inENCA is false, use "month/day/year" format
+    [month, day, year] = dateString.split("/").map(Number);
+  }
   return new Date(year, month - 1, day);
 }
 
-export function setCourseTimes(courses: TCourse[]): TCourse[] {
+export function setCourseTimes(courses: TCourse[], inENCA: boolean): TCourse[] {
   const dayMapping: { [key: string]: number } = {
     MON: 1,
     TUE: 2,
@@ -77,7 +85,7 @@ export function setCourseTimes(courses: TCourse[]): TCourse[] {
 
       updatedCourse.frequency.forEach((day) => {
         const dayNumber = dayMapping[day.toUpperCase()]; // Get the day number
-        const startDate = parseDateString(updatedCourse.startDate);
+        const startDate = parseDateString(updatedCourse.startDate, inENCA);
 
         // Ensure valid date objects
         if (!isValid(startDate)) {

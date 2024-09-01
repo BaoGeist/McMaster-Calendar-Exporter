@@ -5,14 +5,26 @@ import { CourseProvider } from "./context/CourseContext";
 import Homepage from "./HomePage";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Github } from "lucide-react";
 
 const Page = () => {
   return (
     <CourseProvider>
       <Homepage />
-      <Button variant="link" className="block mx-auto">
-        <Link href="https://www.mac2cal.com/privacy">Privacy Policy</Link>
-      </Button>
+      <div className="flex gap-2 justify-center mb-4">
+        <Button variant="secondary">
+          <Link
+            target="_blank"
+            className="flex"
+            href={"https://github.com/BaoGeist/McMaster-Calendar-Exporter"}
+          >
+            <Github size={18} className="mr" />
+          </Link>
+        </Button>
+        <Button variant="secondary">
+          <Link href="https://www.mac2cal.com/privacy">Privacy Policy</Link>
+        </Button>
+      </div>
       <Toaster />
     </CourseProvider>
   );

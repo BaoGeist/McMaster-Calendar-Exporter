@@ -9,12 +9,14 @@ import { useState } from "react";
 type CalendarButtonProps = {
   authToken: string;
   isNotificationsEnabled: boolean;
+  isCA: boolean;
   className?: string;
 };
 
 const CalendarButton = ({
   authToken,
   isNotificationsEnabled,
+  isCA,
   className,
 }: CalendarButtonProps) => {
   const { courses } = useCourseContext();
@@ -24,7 +26,13 @@ const CalendarButton = ({
   return (
     <Button
       onClick={() => {
-        handleAddToCalendar(authToken, "123", courses, isNotificationsEnabled);
+        handleAddToCalendar(
+          authToken,
+          "123",
+          courses,
+          isNotificationsEnabled,
+          isCA
+        );
         setIsClicked(true);
         toast({
           title: "Schedule copied",

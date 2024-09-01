@@ -7,7 +7,8 @@ export async function handleAddToCalendar(
   authToken: string,
   batchBoundary: string,
   courses: TCourse[],
-  isNotificationsEnabled: boolean
+  isNotificationsEnabled: boolean,
+  inENCA: boolean
 ) {
   const fetchOptions = {
     method: "POST",
@@ -18,7 +19,12 @@ export async function handleAddToCalendar(
       Accept: "*/*",
       Connection: "keep-alive",
     },
-    body: await generateBatchString(courses, authToken, isNotificationsEnabled),
+    body: await generateBatchString(
+      courses,
+      authToken,
+      isNotificationsEnabled,
+      inENCA
+    ),
   };
 
   try {

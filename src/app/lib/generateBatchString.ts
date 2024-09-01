@@ -5,16 +5,17 @@ import { setCourseTimes } from "./setCourseTimes";
 export function generateBatchString(
   courses: TCourse[],
   authToken: string,
-  isNotificationsEnabled: boolean
+  isNotificationsEnabled: boolean,
+  inENCA: boolean
 ): string {
-  const coursesFixed = setCourseTimes(courses);
+  const coursesFixed = setCourseTimes(courses, inENCA);
   let batchString = "";
   const batchBoundary = "batch123456789876543";
   let batchCount = 0;
 
   function convertDateAndAddDay(dateStr: string): string | null {
     // Define the input format and output format
-    const inputFormat = "dd/MM/yyyy";
+    const inputFormat = inENCA ? "dd/MM/yyyy" : "MM/dd/yyyy";
     const outputFormat = "yyyyMMdd";
 
     // Parse the input date string
@@ -37,7 +38,15 @@ export function generateBatchString(
 
   // Helper function to format date and time
   const formatDateTime = (date: string, time: string) => {
-    const [day, month, year] = date.split("/");
+    let day: string, month: string, year: string;
+
+    if (inENCA) {
+      // If inENCA is true, use "day/month/year" format
+      [day, month, year] = date.split("/");
+    } else {
+      // If inENCA is false, use "month/day/year" format
+      [month, day, year] = date.split("/");
+    }
 
     // Check if time includes AM or PM
     const isPM = time.toUpperCase().includes("PM");

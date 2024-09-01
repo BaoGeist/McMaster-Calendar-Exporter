@@ -24,6 +24,7 @@ import { Toggle } from "../components/ui/toggle";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@radix-ui/react-label";
 import CoursesTable from "./CoursesTable";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export type TCourse = {
   name: string;
@@ -42,6 +43,7 @@ const Homepage = () => {
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [text, setText] = useState("");
   const { courses, setCourses } = useCourseContext();
+  const [isCA, setIsCA] = useState(true);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
 
   const handleToggle = () => {
@@ -122,6 +124,20 @@ const Homepage = () => {
           link is broken. Not sure when theyre going to fix it but this is an
           alternative until that works again. If you are having issues, sign out
           and sign back in again.
+          <br />
+          <br />
+          P.s. This app is still getting approved so you will get a warning when
+          signing in with Google. You can continue by clicking advanced and
+          continuing with Google. You could also wait until the app is approved,
+          or check out the{" "}
+          <Link
+            target="_blank"
+            className="text-primary hover:underline"
+            href="https://github.com/BaoGeist/McMaster-Calendar-Exporter"
+          >
+            code here
+          </Link>{" "}
+          if you are still unsure.
         </p>
 
         <Card className="mt-8">
@@ -209,6 +225,29 @@ const Homepage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-6">
+              <p className="mb-2">Which format are your dates in?</p>
+              <RadioGroup
+                defaultValue="en-ca"
+                onValueChange={(val) => {
+                  setIsCA(val === "en-ca");
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="en-ca" id="en-ca" />
+                  <Label className="cursor-pointer" htmlFor="en-ca">
+                    DD/MM/YYYY
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="en-us" id="en-us" />
+                  <Label className="cursor-pointer" htmlFor="en-us">
+                    MM/DD/YYYY
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+
             <Textarea
               className="h-[200px]"
               value={text}
@@ -229,6 +268,7 @@ const Homepage = () => {
               authToken={session?.provider_token ?? ""}
               isNotificationsEnabled={isNotificationsEnabled}
               className="text-wrap"
+              isCA={isCA}
             />
           </CardContent>
         </Card>

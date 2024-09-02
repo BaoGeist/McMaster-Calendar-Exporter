@@ -28,8 +28,8 @@ function CoursesTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {courses.map((course) => (
-            <TableRow key={course.name}>
+          {courses.map((course, i) => (
+            <TableRow key={i}>
               <TableCell>{course.name}</TableCell>
               <TableCell>{course.startDate}</TableCell>
               <TableCell>{course.startTime}</TableCell>

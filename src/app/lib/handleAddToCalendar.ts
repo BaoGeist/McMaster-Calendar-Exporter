@@ -51,7 +51,9 @@ export async function handleAddToCalendar(
       console.log("data from adding: ", data);
     } else {
       const text = await response.text();
+      console.log("ok", text);
       console.log("Response text:", text);
+      console.log("ok");
     }
   } catch (error) {
     console.error("Error:", error);

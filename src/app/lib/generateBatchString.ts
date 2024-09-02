@@ -1,6 +1,7 @@
 import { addDays, format, isValid, parse } from "date-fns";
 import { TCourse } from "../HomePage";
 import { setCourseTimes } from "./setCourseTimes";
+import { toZonedTime, format as tzFormat } from 'date-fns-tz';
 
 export function generateBatchString(
   courses: TCourse[],
@@ -39,7 +40,8 @@ export function generateBatchString(
   // Helper function to format date and time
   const formatDateTime = (date: string, time: string) => {
     let day: string, month: string, year: string;
-
+    const timeZone = 'America/New_York';
+    
     if (inENCA) {
       // If inENCA is true, use "day/month/year" format
       [day, month, year] = date.split("/");
@@ -61,10 +63,13 @@ export function generateBatchString(
       hours = "00";
     }
 
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(
-      2,
-      "0"
-    )}T${hours.padStart(2, "0")}:${minutes}:00-04:00`;
+    const dateStr = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")} ${hours.padStart(2, "0")}:${minutes}:00`;
+    
+    // Convert the local time to UTC considering the specified time zone
+    const zonedDate = toZonedTime(dateStr, timeZone);
+
+    // Format the date to the required format with time zone offset
+    return tzFormat(zonedDate, "yyyy-MM-dd'T'HH:mm:ssXXX", { timeZone });
   };
 
   function parseTimeToString(timeString: string): string {
@@ -169,11 +174,11 @@ export function generateBatchString(
       },
       start: {
         dateTime: startDateTime,
-        timeZone: "America/New_York",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       end: {
         dateTime: endDateTime,
-        timeZone: "America/New_York",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       recurrence: [
         `RRULE:FREQ=WEEKLY;UNTIL=${convertDateAndAddDay(

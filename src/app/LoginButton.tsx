@@ -11,7 +11,6 @@ type LoginButtonProps = {
 
 const LoginButton = ({ className }: LoginButtonProps) => {
   const supabase = supabaseBrowser();
-  const [session, setSession] = useState<any>(undefined);
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -21,9 +20,6 @@ const LoginButton = ({ className }: LoginButtonProps) => {
         scopes: "https://www.googleapis.com/auth/calendar",
       },
     });
-
-    console.log(supabase.auth.getSession());
-    setSession(supabase.auth.getSession());
   };
 
   return (

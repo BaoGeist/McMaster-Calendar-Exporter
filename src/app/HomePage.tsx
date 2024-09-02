@@ -90,8 +90,6 @@ const Homepage = () => {
           setCourses(newCourses);
         }
       }
-
-      console.log(newCourses);
     };
 
     const parseCoursesData = (data: string) => {
@@ -130,7 +128,6 @@ const Homepage = () => {
         newCourses.push(course);
       }
 
-      console.log(newCourses);
       setCourses(newCourses);
     };
 
@@ -171,10 +168,11 @@ const Homepage = () => {
           and sign back in again.
           <br />
           <br />
-          P.s. This app is still getting approved so you will get a warning when
-          signing in with Google. You can continue by clicking advanced and
-          continuing with Google. You could also wait until the app is approved,
-          or check out the{" "}
+          P.s. This app is{" "}
+          <b>still getting approved by Google which is a 4-6 week process </b>so
+          you will get a warning when signing in with Google. You can continue
+          by <b> clicking advanced and continuing with Google</b>. You could
+          also wait until the app is approved, or check out the{" "}
           <Link
             target="_blank"
             className="text-primary hover:underline"
@@ -185,10 +183,7 @@ const Homepage = () => {
           if you are still unsure.
           <br />
           <br />
-          P.s.s. Double check the imported calendar afterwards as there seems to
-          be some classes that are shifted forward by an hour for some reason.
-          You can manually fix this in your calendar by moving it and applying
-          the edit to all events.
+          P.s.s. Do double check because who knows.
         </p>
 
         <Card className="mt-8">
@@ -247,9 +242,9 @@ const Homepage = () => {
               <Button variant="link" className="p-0 h-fit">
                 <Link
                   target="_blank"
-                  href="https://csprd.mcmaster.ca/psp/prcsprd/EMPLOYEE/EPM/c/MCM_CUSTOM_MENU.MCM_TIMETBL_CMP.GBL"
+                  href="https://timetabletooutlook.mcmaster.ca/"
                 >
-                  original mosaic export page
+                  mosaic export to Outlook page
                 </Link>
               </Button>{" "}
               and copy and paste your courses below. Highlight your courses
@@ -266,7 +261,7 @@ const Homepage = () => {
               >
                 <div className="">
                   <Image
-                    src="/assets/example.png"
+                    src="/assets/example2.png"
                     alt="Example of how to highlight your courses"
                     width={1416}
                     height={338}

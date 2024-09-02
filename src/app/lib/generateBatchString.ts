@@ -14,8 +14,6 @@ export function generateBatchString(
   const batchBoundary = "batch123456789876543";
   let batchCount = 0;
 
-  console.log(coursesFixed);
-
   function convertDateAndAddDay(dateStr: string): string | null {
     // Define the input format and output format
     const inputFormat = inENCA ? "yyyy-MM-dd" : "yyyy-dd-MM";

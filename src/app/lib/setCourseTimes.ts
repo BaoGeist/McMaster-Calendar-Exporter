@@ -43,23 +43,23 @@ function parseDateString(dateString: string, inENCA: boolean): Date {
 
   if (inENCA) {
     // If inENCA is true, use "day/month/year" format
-    [day, month, year] = dateString.split("/").map(Number);
+    [year, month, day] = dateString.split("-").map(Number);
   } else {
     // If inENCA is false, use "month/day/year" format
-    [month, day, year] = dateString.split("/").map(Number);
+    [year, day, month] = dateString.split("-").map(Number);
   }
   return new Date(year, month - 1, day);
 }
 
 export function setCourseTimes(courses: TCourse[], inENCA: boolean): TCourse[] {
   const dayMapping: { [key: string]: number } = {
-    MON: 1,
-    TUE: 2,
-    WED: 3,
-    THU: 4,
-    FRI: 5,
-    SAT: 6,
-    SUN: 0,
+    M: 1,
+    TU: 2,
+    W: 3,
+    TH: 4,
+    F: 5,
+    SA: 6,
+    SU: 0,
   };
 
   const courseMap: { [name: string]: TCourse[] } = {};
@@ -110,7 +110,7 @@ export function setCourseTimes(courses: TCourse[], inENCA: boolean): TCourse[] {
 
       // Format the earliest start date
       if (earliestStartDate) {
-        updatedCourse.startDate = format(earliestStartDate, "dd/MM/yyyy");
+        updatedCourse.startDate = format(earliestStartDate, "yyyy-MM-dd");
       }
 
       updatedCourses.push(updatedCourse);

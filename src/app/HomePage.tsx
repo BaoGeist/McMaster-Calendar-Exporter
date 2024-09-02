@@ -51,6 +51,49 @@ const Homepage = () => {
   };
 
   useEffect(() => {
+    const parseCoursesData2 = (data: string) => {
+      if (!data) return;
+
+      const lines = data.trim().split("\n\n");
+      const newCourses: TCourse[] = [];
+      for (const line of lines) {
+        const [name, section, others] = line.split("\t");
+
+        const differentCourses = others.trim().split("\n");
+        const differentCoursesNumber = differentCourses.length / 6;
+
+        for (let i = 0; i < differentCoursesNumber; i++) {
+          const startDate = differentCourses[i];
+          const endDate = differentCourses[i + differentCoursesNumber];
+          const startTime = differentCourses[i + differentCoursesNumber * 2];
+          const endTime = differentCourses[i + differentCoursesNumber * 3];
+          const room = differentCourses[i + differentCoursesNumber * 4];
+          const frequency = differentCourses[i + differentCoursesNumber * 5];
+
+          const indexOfDash = name.indexOf(" - ");
+          const newName = `${name.slice(0, indexOfDash)} ${section}${name.slice(
+            indexOfDash
+          )}`;
+
+          const course: TCourse = {
+            name: newName,
+            startDate: startDate.trim(),
+            endDate: endDate.trim(),
+            startTime: startTime.trim(),
+            endTime: endTime.trim(),
+            frequency: frequency.trim().split(" "),
+            location: room.trim(),
+            export: true,
+          };
+
+          newCourses.push(course);
+          setCourses(newCourses);
+        }
+      }
+
+      console.log(newCourses);
+    };
+
     const parseCoursesData = (data: string) => {
       if (!data) return;
       const lines = data.trim().split("\n");
@@ -87,10 +130,12 @@ const Homepage = () => {
         newCourses.push(course);
       }
 
+      console.log(newCourses);
       setCourses(newCourses);
     };
 
-    parseCoursesData(text);
+    // parseCoursesData(text);
+    parseCoursesData2(text);
   }, [text]);
 
   useEffect(() => {
@@ -242,13 +287,13 @@ const Homepage = () => {
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="en-ca" id="en-ca" />
                   <Label className="cursor-pointer" htmlFor="en-ca">
-                    DD/MM/YYYY
+                    YYYY-MM-DD
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="en-us" id="en-us" />
                   <Label className="cursor-pointer" htmlFor="en-us">
-                    MM/DD/YYYY
+                    YYYY-DD-MM
                   </Label>
                 </div>
               </RadioGroup>

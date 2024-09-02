@@ -1,7 +1,7 @@
 import { addDays, format, isValid, parse } from "date-fns";
 import { TCourse } from "../HomePage";
 import { setCourseTimes } from "./setCourseTimes";
-import { toZonedTime, format as tzFormat } from 'date-fns-tz';
+import { toZonedTime, format as tzFormat } from "date-fns-tz";
 
 export function generateBatchString(
   courses: TCourse[],
@@ -14,9 +14,11 @@ export function generateBatchString(
   const batchBoundary = "batch123456789876543";
   let batchCount = 0;
 
+  console.log(coursesFixed);
+
   function convertDateAndAddDay(dateStr: string): string | null {
     // Define the input format and output format
-    const inputFormat = inENCA ? "dd/MM/yyyy" : "MM/dd/yyyy";
+    const inputFormat = inENCA ? "yyyy-MM-dd" : "yyyy-dd-MM";
     const outputFormat = "yyyyMMdd";
 
     // Parse the input date string
@@ -40,31 +42,21 @@ export function generateBatchString(
   // Helper function to format date and time
   const formatDateTime = (date: string, time: string) => {
     let day: string, month: string, year: string;
-    const timeZone = 'America/New_York';
-    
+    const timeZone = "America/New_York";
+
     if (inENCA) {
       // If inENCA is true, use "day/month/year" format
-      [day, month, year] = date.split("/");
+      [year, month, day] = date.split("-");
     } else {
       // If inENCA is false, use "month/day/year" format
-      [month, day, year] = date.split("/");
+      [year, day, month] = date.split("-");
     }
 
-    // Check if time includes AM or PM
-    const isPM = time.toUpperCase().includes("PM");
-    const timeWithoutMeridiem = time.replace(/\s?[APap][Mm]/, "");
+    const dateStr = `${year}-${month.padStart(2, "0")}-${day.padStart(
+      2,
+      "0"
+    )} ${time.replaceAll(":", "")}`;
 
-    let [hours, minutes] = timeWithoutMeridiem.split(":");
-
-    // Convert to 24-hour format if necessary
-    if (isPM && hours !== "12") {
-      hours = String(parseInt(hours, 10) + 12);
-    } else if (!isPM && hours === "12") {
-      hours = "00";
-    }
-
-    const dateStr = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")} ${hours.padStart(2, "0")}:${minutes}:00`;
-    
     // Convert the local time to UTC considering the specified time zone
     const zonedDate = toZonedTime(dateStr, timeZone);
 
@@ -89,7 +81,7 @@ export function generateBatchString(
 
   // Function to append time to each date string
   function appendTimeToDates(dateStr: string, startTime: string): string {
-    const timeString = parseTimeToString(startTime);
+    const timeString = startTime.replaceAll(":", "");
 
     // Split the input dates by comma
     const dates = dateStr.split(",");
@@ -112,13 +104,13 @@ export function generateBatchString(
   // Helper function to format day abbreviations
   const formatDay = (day: string) => {
     const dayMap: { [key: string]: string } = {
-      Mon: "MO",
-      Tue: "TU",
-      Wed: "WE",
-      Thu: "TH",
-      Fri: "FR",
-      Sat: "SA",
-      Sun: "SU",
+      M: "MO",
+      Tu: "TU",
+      W: "WE",
+      Th: "TH",
+      F: "FR",
+      Sa: "SA",
+      Su: "SU",
     };
     return dayMap[day] || day;
   };

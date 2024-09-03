@@ -25,6 +25,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@radix-ui/react-label";
 import CoursesTable from "./CoursesTable";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Sticker, TriangleAlert } from "lucide-react";
 
 export type TCourse = {
   name: string;
@@ -42,9 +44,10 @@ const Homepage = () => {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [session, setSession] = useState<Session | undefined>(undefined);
   const [text, setText] = useState("");
-  const { courses, setCourses } = useCourseContext();
+  const { setCourses } = useCourseContext();
   const [isCA, setIsCA] = useState(true);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleToggle = () => {
     setIsNotificationsEnabled(!isNotificationsEnabled);
@@ -52,43 +55,55 @@ const Homepage = () => {
 
   useEffect(() => {
     const parseCoursesData2 = (data: string) => {
-      if (!data) return;
+      try {
+        if (!data) return;
 
-      const lines = data.trim().split("\n\n");
-      const newCourses: TCourse[] = [];
-      for (const line of lines) {
-        const [name, section, others] = line.split("\t");
+        const lines = data.trim().split("\n\n");
+        const newCourses: TCourse[] = [];
 
-        const differentCourses = others.trim().split("\n");
-        const differentCoursesNumber = differentCourses.length / 6;
+        for (const line of lines) {
+          const [name, section, others] = line.split("\t");
 
-        for (let i = 0; i < differentCoursesNumber; i++) {
-          const startDate = differentCourses[i];
-          const endDate = differentCourses[i + differentCoursesNumber];
-          const startTime = differentCourses[i + differentCoursesNumber * 2];
-          const endTime = differentCourses[i + differentCoursesNumber * 3];
-          const room = differentCourses[i + differentCoursesNumber * 4];
-          const frequency = differentCourses[i + differentCoursesNumber * 5];
+          const differentCourses = others.trim().split("\n");
+          const differentCoursesNumber = differentCourses.length / 6;
 
-          const indexOfDash = name.indexOf(" - ");
-          const newName = `${name.slice(0, indexOfDash)} ${section}${name.slice(
-            indexOfDash
-          )}`;
+          for (let i = 0; i < differentCoursesNumber; i++) {
+            const startDate = differentCourses[i];
+            const endDate = differentCourses[i + differentCoursesNumber];
+            const startTime = differentCourses[i + differentCoursesNumber * 2];
+            const endTime = differentCourses[i + differentCoursesNumber * 3];
+            const room = differentCourses[i + differentCoursesNumber * 4];
+            const frequency = differentCourses[i + differentCoursesNumber * 5];
 
-          const course: TCourse = {
-            name: newName,
-            startDate: startDate.trim(),
-            endDate: endDate.trim(),
-            startTime: startTime.trim(),
-            endTime: endTime.trim(),
-            frequency: frequency.trim().split(" "),
-            location: room.trim(),
-            export: true,
-          };
+            const indexOfDash = name.indexOf(" - ");
+            const newName = `${name.slice(
+              0,
+              indexOfDash
+            )} ${section}${name.slice(indexOfDash)}`;
 
-          newCourses.push(course);
-          setCourses(newCourses);
+            const course: TCourse = {
+              name: newName,
+              startDate: startDate.trim(),
+              endDate: endDate.trim(),
+              startTime: startTime.trim(),
+              endTime: endTime.trim(),
+              frequency: frequency.trim().split(" "),
+              location: room.trim(),
+              export: true,
+            };
+
+            newCourses.push(course);
+          }
         }
+
+        // Only set courses if everything is successful
+        setCourses(newCourses);
+        setErrorMessage("");
+      } catch (error) {
+        // console.error("Error parsing course data:", error);
+        setErrorMessage(
+          "Error parsing course data, please ensure you are copying from the outlook table"
+        );
       }
     };
 
@@ -183,7 +198,10 @@ const Homepage = () => {
           if you are still unsure.
           <br />
           <br />
-          P.s.s. Do double check because who knows.
+          P.s.s. Do double check because who knows. There was a bug found on
+          September 2nd at 10:30pm that was fixed. If you tried to copy your
+          schedule and it did not work, please try again and we are sorry there
+          were issues the first time :{")"}.
         </p>
 
         <Card className="mt-8">
@@ -292,6 +310,27 @@ const Homepage = () => {
                   </Label>
                 </div>
               </RadioGroup>
+              {errorMessage ? (
+                <Alert variant="destructive" className="mt-4">
+                  <TriangleAlert className="h-4 w-4" />
+                  <AlertTitle>Ruh roh!</AlertTitle>
+                  <AlertDescription>
+                    The data you pasted doesn't match the expected format,
+                    please make sure you are copying from outlook table (and
+                    maybe only from chrome?) If you are still having troubles,
+                    email baozlego@gmail.com or message @bungeist on discord.
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Alert variant="default" className="mt-4">
+                  <Sticker className="h-4 w-4" />
+                  <AlertTitle>Yay!</AlertTitle>
+                  <AlertDescription>
+                    The data you pasted matches the expected format, you are
+                    good to import to Google Calendar!
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
 
             <Textarea

@@ -178,9 +178,10 @@ const Homepage = () => {
 
         <p className="text-lg mt-4">
           Copying your course schedule to Google Calendar through the Reddit
-          link is broken. Not sure when theyre going to fix it but this is an
-          alternative until that works again. If you are having issues, sign out
-          and sign back in again.
+          link used to be broken, but is no longer broken, find it somewhere.
+          Not sure when theyre going to fix it but this is an alternative until
+          that works again. If you are having issues, sign out and sign back in
+          again.
           <br />
           <br />
           P.s. This app is{" "}

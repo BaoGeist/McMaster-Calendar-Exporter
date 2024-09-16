@@ -177,11 +177,8 @@ const Homepage = () => {
         </h1>
 
         <p className="text-lg mt-4">
-          Copying your course schedule to Google Calendar through the Reddit
-          link used to be broken, but is no longer broken, find it somewhere.
-          Not sure when theyre going to fix it but this is an alternative until
-          that works again. If you are having issues, sign out and sign back in
-          again.
+          Copying your course schedule to Google Calendar is also available through 
+          <a href="https://csprd.mcmaster.ca/psp/prcsprd/EMPLOYEE/EPM/c/MCM_CUSTOM_MENU.MCM_TIMETBL_CMP.GBL">Mosaic</a>
           <br />
           <br />
           P.s. This app is{" "}

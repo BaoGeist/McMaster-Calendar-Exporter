@@ -176,19 +176,23 @@ const Homepage = () => {
           <span className="text-xl text-primary">2</span> Google Calendar
         </h1>
 
+        <p className="text-lg text-gray-700 italic my-2">
+          Easily sync your McMaster University class schedules to Google
+          Calendar for better organization and time management.
+        </p>
         <p className="text-lg mt-4">
-          Copying your course schedule to Google Calendar through the Reddit
-          link used to be broken, but is no longer broken, find it somewhere.
-          Not sure when theyre going to fix it but this is an alternative until
-          that works again. If you are having issues, sign out and sign back in
-          again.
+          This app helps students export their McMaster University class
+          schedules directly into Google Calendar for better organization and
+          time management. It was developed by a couple of students when the
+          original McMaster tool for this went down. We hope you find it useful
+          and we hope to add more customizations in the future!
           <br />
           <br />
-          P.s. This app is{" "}
-          <b>still getting approved by Google which is a 4-6 week process </b>so
+          P.S. This app is{" "}
+          <b>still getting approved by Google, which is a long process</b>, so
           you will get a warning when signing in with Google. You can continue
-          by <b> clicking advanced and continuing with Google</b>. You could
-          also wait until the app is approved, or check out the{" "}
+          by <b>clicking advanced and continuing with Google</b>. You could also
+          wait until the app is approved, or check out the{" "}
           <Link
             target="_blank"
             className="text-primary hover:underline"
@@ -199,10 +203,10 @@ const Homepage = () => {
           if you are still unsure.
           <br />
           <br />
-          P.s.s. Do double check because who knows. There was a bug found on
-          September 2nd at 10:30pm that was fixed. If you tried to copy your
-          schedule and it did not work, please try again and we are sorry there
-          were issues the first time :{")"}.
+          This app requests your McMaster schedule data to extract calendar
+          information and access to your Google account to sync events securely.
+          We value your privacy and do not store any personal information. You
+          can read our complete Privacy Policy at the bottom of the page.
         </p>
 
         <Card className="mt-8">

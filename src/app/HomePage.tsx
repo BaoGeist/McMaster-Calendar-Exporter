@@ -185,35 +185,30 @@ const Homepage = () => {
           schedules directly into Google Calendar for better organization and
           time management. It was developed by a couple of students when the
           original McMaster tool for this went down. We hope you find it useful
-          and we hope to add more customizations in the future!
-          <br />
-          <br />
-          P.S. This app is{" "}
-          <b>still getting approved by Google, which is a long process</b>, so
-          you will get a warning when signing in with Google. You can continue
-          by <b>clicking advanced and continuing with Google</b>. You could also
-          wait until the app is approved, or check out the{" "}
+          and we hope to add more customizations in the future! If you have any
+          customizations to suggest, submit{" "}
           <Link
             target="_blank"
             className="text-primary hover:underline"
-            href="https://github.com/BaoGeist/McMaster-Calendar-Exporter"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfK35zyx8HQb72PZJq-aNtREeuaHSeaV8U3iaYzEDUFkBe5Jw/viewform?usp=dialog"
           >
-            code here
-          </Link>{" "}
-          if you are still unsure.
+            here
+          </Link>
+          .
           <br />
           <br />
           This app requests your McMaster schedule data to extract calendar
           information and access to your Google account to sync events securely.
           We value your privacy and do not store any personal information. You
-          can read our complete Privacy Policy at the bottom of the page.
+          can find our privacy policy and link to the Github at the bottom of
+          the page.
         </p>
 
         <Card className="mt-8">
           <CardHeader>
             <CardTitle>Step 1: Allow Google Calendar Access</CardTitle>
             <CardDescription>
-              Sign into google calendar and press "allow"
+              Sign into google calendar and press "allow".
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -242,7 +237,7 @@ const Homepage = () => {
           <CardHeader>
             <CardTitle>Step 2: Toggle Notifications</CardTitle>
             <CardDescription>
-              Select if you want each calendar event to include a reminder
+              Select if you want each calendar event to include a reminder.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -277,9 +272,12 @@ const Homepage = () => {
                 title="Example Highlight"
                 className="w-[1200px]"
                 trigger={
-                  <Button variant="link" className="inline p-0 h-fit">
-                    picture here
-                  </Button>
+                  <>
+                    <Button variant="link" className="inline p-0 h-fit">
+                      picture here
+                    </Button>
+                    .
+                  </>
                 }
               >
                 <div className="">
@@ -321,9 +319,9 @@ const Homepage = () => {
                   <AlertTitle>Ruh roh!</AlertTitle>
                   <AlertDescription>
                     The data you pasted doesn't match the expected format,
-                    please make sure you are copying from outlook table (and
-                    maybe only from chrome?) If you are still having troubles,
-                    email baozlego@gmail.com or message @bungeist on discord.
+                    please make sure you are copying from outlook table. Courses
+                    without scheduled classes cause issues. If you are still
+                    having troubles, or message @bungeist on discord.
                   </AlertDescription>
                 </Alert>
               ) : (
@@ -351,6 +349,10 @@ const Homepage = () => {
             <CardTitle>
               Step 4: Confirm and copy your schedule to Google Calendar
             </CardTitle>
+            <CardDescription>
+              If you are experiencing issues, try logging out below and then
+              logging back in.
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <CoursesTable />

@@ -26,7 +26,7 @@ import { Label } from "@radix-ui/react-label";
 import CoursesTable from "./CoursesTable";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Sticker, TriangleAlert } from "lucide-react";
+import { Sticker, Terminal, TriangleAlert } from "lucide-react";
 
 export type TCourse = {
   name: string;
@@ -180,6 +180,18 @@ const Homepage = () => {
           Easily sync your McMaster University class schedules to Google
           Calendar for better organization and time management.
         </p>
+
+        <Alert variant="destructive">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            Note that My TimeTable to Outlook that this tool relies on will
+            allow timetables to be copied starting <b>September 1st</b>! Please
+            log into this tool then to import your calendars. Sorry about the
+            wait Mac is slow as we all know :)
+          </AlertDescription>
+        </Alert>
+
         <p className="text-lg mt-4">
           This app helps students export their McMaster University class
           schedules directly into Google Calendar for better organization and

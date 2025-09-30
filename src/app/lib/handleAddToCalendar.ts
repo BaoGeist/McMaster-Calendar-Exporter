@@ -8,7 +8,8 @@ export async function handleAddToCalendar(
   batchBoundary: string,
   courses: TCourse[],
   isNotificationsEnabled: boolean,
-  inENCA: boolean
+  inENCA: boolean,
+  calendarId: string = "primary"
 ) {
   const fetchOptions = {
     method: "POST",
@@ -23,7 +24,8 @@ export async function handleAddToCalendar(
       courses,
       authToken,
       isNotificationsEnabled,
-      inENCA
+      inENCA,
+      calendarId
     ),
   };
 

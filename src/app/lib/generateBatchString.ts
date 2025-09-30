@@ -7,7 +7,8 @@ export function generateBatchString(
   courses: TCourse[],
   authToken: string,
   isNotificationsEnabled: boolean,
-  inENCA: boolean
+  inENCA: boolean,
+  calendarId: string = "primary"
 ): string {
   const coursesFixed = setCourseTimes(courses, inENCA);
   let batchString = "";
@@ -142,7 +143,7 @@ export function generateBatchString(
       Date.now() + batchCount
     }@googleapis.com>\n\n`;
     batchString +=
-      "POST /calendar/v3/calendars/primary/events?sendNotifications=false&alt=json\n";
+      `POST /calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?sendNotifications=false&alt=json\n`;
     batchString +=
       "X-JavaScript-User-Agent: google-api-javascript-client/1.1.0\n";
     batchString += "X-Requested-With: XMLHttpRequest\n";

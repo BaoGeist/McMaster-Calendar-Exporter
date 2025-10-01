@@ -38,6 +38,7 @@ export type TCourse = {
   location: string;
   export: boolean;
   isPotentiallyIrregular?: boolean;
+  colorId?: string;
 };
 
 const Homepage = () => {
@@ -170,7 +171,7 @@ const Homepage = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <main className="mt-16 max-w-[1000px] mx-4 mb-16">
+      <main className="mt-16 max-w-[60%] mx-4 mb-16">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
           <span className="text-primary">McMaster</span> Schedule{" "}
           <span className="text-xl text-primary">2</span> Google Calendar
@@ -181,7 +182,7 @@ const Homepage = () => {
           Calendar for better organization and time management.
         </p>
 
-        <Alert variant="destructive">
+        {/* <Alert variant="destructive">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
@@ -190,7 +191,7 @@ const Homepage = () => {
             log into this tool then to import your calendars. Sorry about the
             wait Mac is slow as we all know :)
           </AlertDescription>
-        </Alert>
+        </Alert> */}
 
         <p className="text-lg mt-4">
           This app helps students export their McMaster University class

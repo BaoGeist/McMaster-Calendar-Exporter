@@ -122,7 +122,13 @@ export function generateBatchString(
     return sectionCodeMatch ? sectionCodeMatch[0] : null;
   }
 
-  const getColorId = (courseType: string): number => {
+  const getColorId = (courseType: string, customColorId?: string): number => {
+    // If a custom color is set, use it
+    if (customColorId) {
+      return parseInt(customColorId);
+    }
+
+    // Otherwise, fall back to the default color scheme based on course type
     switch (courseType) {
       case "T":
         return 4;
@@ -183,7 +189,7 @@ export function generateBatchString(
       reminders: {
         useDefault: isNotificationsEnabled,
       },
-      colorId: getColorId(extractSectionCode(course.name)![0]), // Cycles through colorIds 1-11
+      colorId: getColorId(extractSectionCode(course.name)![0], course.colorId),
     };
 
     batchString += JSON.stringify(eventData);

@@ -18,6 +18,7 @@ export type TCourse = {
   location: string;
   export: boolean;
   isPotentiallyIrregular?: boolean;
+  colorId?: string;
 };
 
 function parseTime(timeString: string): Date {

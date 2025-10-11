@@ -27,6 +27,7 @@ import CoursesTable from "./CoursesTable";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Sticker, Terminal, TriangleAlert } from "lucide-react";
+import ImportCounter from "./ImportCounter";
 
 export type TCourse = {
   name: string;
@@ -216,6 +217,8 @@ const Homepage = () => {
           can find our privacy policy and link to the Github at the bottom of
           the page.
         </p>
+
+        <ImportCounter />
 
         <Card className="mt-8">
           <CardHeader>

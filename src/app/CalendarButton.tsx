@@ -85,23 +85,38 @@ const CalendarButton = ({
       </div>
 
       <Button
-        onClick={() => {
-          handleAddToCalendar(
-            authToken,
-            "123",
-            courses,
-            isNotificationsEnabled,
-            isCA,
-            selectedCalendar
-          );
-          setIsClicked(true);
-          toast({
-            title: "Schedule copied",
-            description: `Your schedule has been copied to ${
-              calendars.find((c) => c.id === selectedCalendar)?.summary ||
-              "your calendar"
-            }`,
-          });
+        onClick={async () => {
+          try {
+            await handleAddToCalendar(
+              authToken,
+              "123",
+              courses,
+              isNotificationsEnabled,
+              isCA,
+              selectedCalendar
+            );
+
+            // Increment the import counter
+            await fetch('/api/stats/increment', {
+              method: 'POST',
+            });
+
+            setIsClicked(true);
+            toast({
+              title: "Schedule copied",
+              description: `Your schedule has been copied to ${
+                calendars.find((c) => c.id === selectedCalendar)?.summary ||
+                "your calendar"
+              }`,
+            });
+          } catch (error) {
+            console.error('Error adding to calendar:', error);
+            toast({
+              title: "Error",
+              description: "Failed to copy schedule to calendar",
+              variant: "destructive",
+            });
+          }
         }}
         className={className ?? ""}
         disabled={isClicked || isLoadingCalendars}

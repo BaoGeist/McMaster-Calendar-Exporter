@@ -39,13 +39,13 @@ const ImportCounter = () => {
   }
 
   return (
-    <Card className="mt-8 bg-primary/5 border-primary/20">
-      <CardContent className="pt-6">
+    <Card className="mt-6 bg-primary/5 border-primary/20">
+      <CardContent className="py-4">
         <div className="text-center">
-          <p className="text-4xl font-bold text-primary mb-2">
+          <p className="text-3xl font-bold text-primary mb-1">
             {stats.importCount.toLocaleString()}
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             {stats.importCount === 1
               ? "person has imported their calendar since October 11th, 2025"
               : "people have imported their calendars since October 11th, 2025"}

@@ -26,7 +26,7 @@ import { Label } from "@radix-ui/react-label";
 import CoursesTable from "./CoursesTable";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Sticker, Terminal, TriangleAlert } from "lucide-react";
+import { Sticker, Terminal, TriangleAlert, X } from "lucide-react";
 import ImportCounter from "./ImportCounter";
 
 export type TCourse = {
@@ -50,6 +50,54 @@ const Homepage = () => {
   const [isCA, setIsCA] = useState(true);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isAvailabilityAlertDismissed, setIsAvailabilityAlertDismissed] =
+    useState(false);
+
+  // Check if current date is within 2 weeks before the next semester opening
+  const getAvailabilityInfo = () => {
+    // Get current date in Eastern Time
+    const nowET = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/Toronto" })
+    );
+    const year = nowET.getFullYear();
+
+    // Define semester opening dates
+    const semesterDates = [
+      { date: new Date(year, 0, 1), name: "January 1" }, // Winter: Jan 1
+      { date: new Date(year, 4, 1), name: "May 1" }, // Spring/Summer: May 1
+      { date: new Date(year, 8, 1), name: "September 1" }, // Fall: Sept 1
+      { date: new Date(year + 1, 0, 1), name: "January 1" }, // Next year Winter: Jan 1
+    ];
+
+    // Find the next opening date
+    let nextOpening = null;
+    for (const semester of semesterDates) {
+      if (semester.date > nowET) {
+        nextOpening = semester;
+        break;
+      }
+    }
+
+    if (!nextOpening) {
+      // Fallback to next year's winter semester
+      nextOpening = { date: new Date(year + 1, 0, 1), name: "January 1" };
+    }
+
+    // Check if we're within 2 weeks (14 days) before the opening date
+    const twoWeeksBefore = new Date(nextOpening.date);
+    twoWeeksBefore.setDate(twoWeeksBefore.getDate() - 14);
+
+    const isWithinTwoWeeks =
+      nowET >= twoWeeksBefore && nowET < nextOpening.date;
+
+    // If within 2 weeks before opening: comingSoon, otherwise: active
+    return {
+      state: isWithinTwoWeeks ? ("comingSoon" as const) : ("active" as const),
+      availableDate: nextOpening.name,
+    };
+  };
+
+  const availabilityInfo = getAvailabilityInfo();
 
   const handleToggle = () => {
     setIsNotificationsEnabled(!isNotificationsEnabled);
@@ -183,212 +231,230 @@ const Homepage = () => {
           Calendar for better organization and time management.
         </p>
 
-        {/* <Alert variant="destructive">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            Note that My TimeTable to Outlook that this tool relies on will
-            allow timetables to be copied starting <b>September 1st</b>! Please
-            log into this tool then to import your calendars. Sorry about the
-            wait Mac is slow as we all know :)
-          </AlertDescription>
-        </Alert> */}
+        {availabilityInfo.state === "comingSoon" && (
+          <>
+            <p className="text-lg mt-4">
+              This app helps students export their McMaster University class
+              schedules directly into Google Calendar for better organization
+              and time management. We hope you find it useful!
+              <br />
+              <br />
+              It will require your pasted McMaster schedule data and access to
+              your Google account to sync events securely. We value your privacy
+              and do not store any personal information. You can find our
+              privacy policy and Github at the bottom of the page.
+            </p>
 
-        <p className="text-lg mt-4">
-          This app helps students export their McMaster University class
-          schedules directly into Google Calendar for better organization and
-          time management. It was developed by a couple of students when the
-          original McMaster tool for this went down. We hope you find it useful
-          and we hope to add more customizations in the future! If you have any
-          customizations to suggest, submit{" "}
-          <Link
-            target="_blank"
-            className="text-primary hover:underline"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfK35zyx8HQb72PZJq-aNtREeuaHSeaV8U3iaYzEDUFkBe5Jw/viewform?usp=dialog"
-          >
-            here
-          </Link>
-          .
-          <br />
-          <br />
-          This app requests your McMaster schedule data to extract calendar
-          information and access to your Google account to sync events securely.
-          We value your privacy and do not store any personal information. You
-          can find our privacy policy and link to the Github at the bottom of
-          the page.
-        </p>
-
-        <ImportCounter />
-
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Step 1: Allow Google Calendar Access</CardTitle>
-            <CardDescription>
-              Sign into google calendar and press "allow".
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {user ? (
-              <div className="flex gap-3">
-                <Image
-                  src={user.user_metadata.avatar_url}
-                  alt={user.user_metadata.full_name}
-                  height={50}
-                  width={50}
-                  className="rounded-md"
-                />
-
-                <div>
-                  <p>{user.user_metadata.full_name}</p>
-                  <p>{user.email}</p>
-                </div>
-              </div>
-            ) : (
-              <LoginButton />
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Step 2: Toggle Notifications</CardTitle>
-            <CardDescription>
-              Select if you want each calendar event to include a reminder.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="notifications"
-                checked={isNotificationsEnabled}
-                onCheckedChange={handleToggle}
-              />
-              <Label htmlFor="notifications">Enable Notifications</Label>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Step 3: Copy & Paste Courses</CardTitle>
-            <CardDescription>
-              Go to the{" "}
-              <Button variant="link" className="p-0 h-fit">
-                <Link
-                  target="_blank"
-                  href="https://timetabletooutlook.mcmaster.ca/"
+            {!isAvailabilityAlertDismissed && (
+              <Alert variant="default" className="mt-8 relative">
+                <Sticker className="h-4 w-4" />
+                <AlertDescription>
+                  This website has been paused until the mosaic export tool is
+                  available on <strong>{availabilityInfo.availableDate}</strong>
+                  . Come back then to import your timetable!
+                </AlertDescription>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 h-6 w-6"
+                  onClick={() => setIsAvailabilityAlertDismissed(true)}
                 >
-                  mosaic export to Outlook page
-                </Link>
-              </Button>{" "}
-              and copy and paste your courses below. Highlight your courses
-              starting from the first cell in the top right corner all the way
-              to the bottom right corner as shown in the{" "}
-              <Modal
-                title="Example Highlight"
-                className="w-[1200px]"
-                trigger={
-                  <>
-                    <Button variant="link" className="inline p-0 h-fit">
-                      picture here
-                    </Button>
-                    .
-                  </>
-                }
-              >
-                <div className="">
-                  <Image
-                    src="/assets/example2.png"
-                    alt="Example of how to highlight your courses"
-                    width={1416}
-                    height={338}
+                  <X className="h-4 w-4" />
+                </Button>
+              </Alert>
+            )}
+          </>
+        )}
+
+        {availabilityInfo.state === "active" && (
+          <>
+            <p className="text-lg mt-4">
+              This app helps students export their McMaster University class
+              schedules directly into Google Calendar for better organization
+              and time management. We hope you find it useful!
+              <br />
+              <br />
+              This app requests your McMaster schedule data to extract calendar
+              information and access to your Google account to sync events
+              securely. We value your privacy and do not store any personal
+              information. You can find our privacy policy and Github at the
+              bottom of the page.
+            </p>
+
+            <ImportCounter />
+
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Step 1: Allow Google Calendar Access</CardTitle>
+                <CardDescription>
+                  Sign into google calendar and press "allow".
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {user ? (
+                  <div className="flex gap-3">
+                    <Image
+                      src={user.user_metadata.avatar_url}
+                      alt={user.user_metadata.full_name}
+                      height={50}
+                      width={50}
+                      className="rounded-md"
+                    />
+
+                    <div>
+                      <p>{user.user_metadata.full_name}</p>
+                      <p>{user.email}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <LoginButton />
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Step 2: Toggle Notifications</CardTitle>
+                <CardDescription>
+                  Select if you want each calendar event to include a reminder.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="notifications"
+                    checked={isNotificationsEnabled}
+                    onCheckedChange={handleToggle}
                   />
+                  <Label htmlFor="notifications">Enable Notifications</Label>
                 </div>
-              </Modal>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-6">
-              <p className="mb-2">Which format are your dates in?</p>
-              <RadioGroup
-                defaultValue="en-ca"
-                onValueChange={(val: string) => {
-                  setIsCA(val === "en-ca");
-                }}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="en-ca" id="en-ca" />
-                  <Label className="cursor-pointer" htmlFor="en-ca">
-                    YYYY-MM-DD
-                  </Label>
+              </CardContent>
+            </Card>
+
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Step 3: Copy & Paste Courses</CardTitle>
+                <CardDescription>
+                  Go to the{" "}
+                  <Button variant="link" className="p-0 h-fit">
+                    <Link
+                      target="_blank"
+                      href="https://timetabletooutlook.mcmaster.ca/"
+                    >
+                      mosaic export to Outlook page
+                    </Link>
+                  </Button>{" "}
+                  and copy and paste your courses below. Highlight your courses
+                  starting from the first cell in the top right corner all the
+                  way to the bottom right corner as shown in the{" "}
+                  <Modal
+                    title="Example Highlight"
+                    className="w-[1200px]"
+                    trigger={
+                      <>
+                        <Button variant="link" className="inline p-0 h-fit">
+                          picture here
+                        </Button>
+                        .
+                      </>
+                    }
+                  >
+                    <div className="">
+                      <Image
+                        src="/assets/example2.png"
+                        alt="Example of how to highlight your courses"
+                        width={1416}
+                        height={338}
+                      />
+                    </div>
+                  </Modal>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-6">
+                  <p className="mb-2">Which format are your dates in?</p>
+                  <RadioGroup
+                    defaultValue="en-ca"
+                    onValueChange={(val: string) => {
+                      setIsCA(val === "en-ca");
+                    }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="en-ca" id="en-ca" />
+                      <Label className="cursor-pointer" htmlFor="en-ca">
+                        YYYY-MM-DD
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="en-us" id="en-us" />
+                      <Label className="cursor-pointer" htmlFor="en-us">
+                        YYYY-DD-MM
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                  {errorMessage ? (
+                    <Alert variant="destructive" className="mt-4">
+                      <TriangleAlert className="h-4 w-4" />
+                      <AlertTitle>Ruh roh!</AlertTitle>
+                      <AlertDescription>
+                        The data you pasted doesn't match the expected format,
+                        please make sure you are copying from outlook table.
+                        Courses without scheduled classes cause issues. If you
+                        are still having troubles, or message @bungeist on
+                        discord.
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <Alert variant="default" className="mt-4">
+                      <Sticker className="h-4 w-4" />
+                      <AlertTitle>Yay!</AlertTitle>
+                      <AlertDescription>
+                        The data you pasted matches the expected format, you are
+                        good to import to Google Calendar!
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="en-us" id="en-us" />
-                  <Label className="cursor-pointer" htmlFor="en-us">
-                    YYYY-DD-MM
-                  </Label>
-                </div>
-              </RadioGroup>
-              {errorMessage ? (
-                <Alert variant="destructive" className="mt-4">
-                  <TriangleAlert className="h-4 w-4" />
-                  <AlertTitle>Ruh roh!</AlertTitle>
-                  <AlertDescription>
-                    The data you pasted doesn't match the expected format,
-                    please make sure you are copying from outlook table. Courses
-                    without scheduled classes cause issues. If you are still
-                    having troubles, or message @bungeist on discord.
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <Alert variant="default" className="mt-4">
-                  <Sticker className="h-4 w-4" />
-                  <AlertTitle>Yay!</AlertTitle>
-                  <AlertDescription>
-                    The data you pasted matches the expected format, you are
-                    good to import to Google Calendar!
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
 
-            <Textarea
-              className="h-[200px]"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </CardContent>
-        </Card>
+                <Textarea
+                  className="h-[200px]"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                />
+              </CardContent>
+            </Card>
 
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>
-              Step 4: Confirm and copy your schedule to Google Calendar
-            </CardTitle>
-            <CardDescription>
-              If you are experiencing issues, try logging out below and then
-              logging back in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CoursesTable />
-            <CalendarButton
-              authToken={session?.provider_token ?? ""}
-              isNotificationsEnabled={isNotificationsEnabled}
-              className="text-wrap"
-              isCA={isCA}
-            />
-          </CardContent>
-        </Card>
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>
+                  Step 4: Confirm and copy your schedule to Google Calendar
+                </CardTitle>
+                <CardDescription>
+                  If you are experiencing issues, try logging out below and then
+                  logging back in.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CoursesTable />
+                <CalendarButton
+                  authToken={session?.provider_token ?? ""}
+                  isNotificationsEnabled={isNotificationsEnabled}
+                  className="text-wrap"
+                  isCA={isCA}
+                />
+              </CardContent>
+            </Card>
 
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>Step 5: Sign out of Google Calendar</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <LogoutButton setSession={setUser} />
-          </CardContent>
-        </Card>
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle>Step 5: Sign out of Google Calendar</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <LogoutButton setSession={setUser} />
+              </CardContent>
+            </Card>
+          </>
+        )}
       </main>
     </div>
   );

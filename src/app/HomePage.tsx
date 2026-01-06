@@ -398,9 +398,13 @@ const Homepage = () => {
                       <AlertTitle>Ruh roh!</AlertTitle>
                       <AlertDescription>
                         The data you pasted doesn't match the expected format,
-                        please make sure you are copying from outlook table.
-                        Courses without scheduled classes cause issues. If you
-                        are still having troubles, or message @bungeist on
+                        please make sure you are copying from outlook table.{" "}
+                        <b>
+                          A common issue is that one of your courses do not have
+                          scheduled class times (e.g. completely remove any
+                          paragraphs that contain "Virtual Classroom").
+                        </b>{" "}
+                        If you are still having troubles, message @bungeist on
                         discord.
                       </AlertDescription>
                     </Alert>

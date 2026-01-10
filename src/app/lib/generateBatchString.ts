@@ -189,7 +189,7 @@ export function generateBatchString(
       reminders: {
         useDefault: isNotificationsEnabled,
       },
-      colorId: getColorId(extractSectionCode(course.name)![0], course.colorId),
+      colorId: getColorId(extractSectionCode(course.name)?.[0] || "", course.colorId),
     };
 
     batchString += JSON.stringify(eventData);

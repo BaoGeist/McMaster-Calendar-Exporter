@@ -131,13 +131,13 @@ export function generateBatchString(
     // Otherwise, fall back to the default color scheme based on course type
     switch (courseType) {
       case "T":
-        return 4;
+        return 4; // Flamingo (coral)
       case "C":
-        return 9;
+        return 9; // Blueberry (blue)
       case "L":
-        return 5;
+        return 5; // Banana (yellow)
       default:
-        return 0; // Default colorId if courseType is not T, C, or L
+        return 8; // Graphite (gray) - Default colorId if courseType is not T, C, or L
     }
   };
 

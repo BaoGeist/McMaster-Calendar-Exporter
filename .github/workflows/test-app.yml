@@ -1,0 +1,27 @@
+name: Test GitHub App
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  test_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          installation_id: ${{ secrets.INSTALLATION_ID }}
+
+      - name: Post a comment using the App's token
+        run: |
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \
+            -f body='Hello from my test app! I am acting as myself. 👋'
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}

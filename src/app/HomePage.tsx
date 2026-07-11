@@ -57,7 +57,7 @@ const Homepage = () => {
   const getAvailabilityInfo = () => {
     // Get current date in Eastern Time
     const nowET = new Date(
-      new Date().toLocaleString("en-US", { timeZone: "America/Toronto" })
+      new Date().toLocaleString("en-US", { timeZone: "America/Toronto" }),
     );
     const year = nowET.getFullYear();
 
@@ -128,7 +128,7 @@ const Homepage = () => {
             const indexOfDash = name.indexOf(" - ");
             const newName = `${name.slice(
               0,
-              indexOfDash
+              indexOfDash,
             )} ${section}${name.slice(indexOfDash)}`;
 
             const course: TCourse = {
@@ -152,7 +152,7 @@ const Homepage = () => {
       } catch (error) {
         // console.error("Error parsing course data:", error);
         setErrorMessage(
-          "Error parsing course data, please ensure you are copying from the outlook table"
+          "Error parsing course data, please ensure you are copying from the outlook table",
         );
       }
     };
@@ -225,6 +225,23 @@ const Homepage = () => {
           <span className="text-primary">McMaster</span> Schedule{" "}
           <span className="text-xl text-primary">2</span> Google Calendar
         </h1>
+
+        <Alert variant="destructive" className="mb-4 mt-4">
+          <TriangleAlert className="h-4 w-4" />
+          <AlertTitle>Notice</AlertTitle>
+          <AlertDescription>
+            This tool is no longer being maintained. Please use{" "}
+            <a
+              href="https://www.maketheseat.ca/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline font-medium"
+            >
+              maketheseat.ca
+            </a>
+            .
+          </AlertDescription>
+        </Alert>
 
         <p className="text-lg text-gray-700 italic my-2">
           Easily sync your McMaster University class schedules to Google

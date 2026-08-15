@@ -1,3 +1,5 @@
+
+
 # McMaster Calendar Exporter
 
 A web application developed to help McMaster University students export their course schedules to Google Calendar after the university discontinued its official tool.
@@ -33,7 +35,7 @@ To run the project locally, follow these steps:
     ```
 5. Start the development server:
     ```bash
-    npm start
+    npm run dev
     ```
 
 ## Contributing

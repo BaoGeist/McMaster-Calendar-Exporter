@@ -8,11 +8,11 @@ export function generateBatchString(
   authToken: string,
   isNotificationsEnabled: boolean,
   inENCA: boolean,
-  calendarId: string = "primary"
+  calendarId: string = "primary",
+  boundary: string = "batch123456789876543",
 ): string {
   const coursesFixed = setCourseTimes(courses, inENCA);
   let batchString = "";
-  const batchBoundary = "batch123456789876543";
   let batchCount = 0;
 
   function convertDateAndAddDay(dateStr: string): string | null {
@@ -53,7 +53,7 @@ export function generateBatchString(
 
     const dateStr = `${year}-${month.padStart(2, "0")}-${day.padStart(
       2,
-      "0"
+      "0",
     )} ${time.replaceAll(":", "")}`;
 
     // Convert the local time to UTC considering the specified time zone
@@ -142,14 +142,13 @@ export function generateBatchString(
   };
 
   for (const course of coursesFixed) {
-    batchString += `--${batchBoundary}\n`;
+    batchString += `--${boundary}\n`;
     batchString += "Content-Type: application/http\n";
     batchString += "Content-Transfer-Encoding: binary\n";
-    batchString += `Content-ID: <${batchBoundary}+${
+    batchString += `Content-ID: <${boundary}+${
       Date.now() + batchCount
     }@googleapis.com>\n\n`;
-    batchString +=
-      `POST /calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?sendNotifications=false&alt=json\n`;
+    batchString += `POST /calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?sendNotifications=false&alt=json\n`;
     batchString +=
       "X-JavaScript-User-Agent: google-api-javascript-client/1.1.0\n";
     batchString += "X-Requested-With: XMLHttpRequest\n";
@@ -179,17 +178,20 @@ export function generateBatchString(
       },
       recurrence: [
         `RRULE:FREQ=WEEKLY;UNTIL=${convertDateAndAddDay(
-          course.endDate
+          course.endDate,
         )};BYDAY=${course.frequency.map(formatDay).join(",")}`,
         `EXDATE;TZID=America/New_York:${appendTimeToDates(
           "20241230,20241231,20240101,20240219,20240220,20240221,20240222,20240223,20240329,20240520,20240701,20240805,20240902,20241014,20241015,20241016,20241017,20241018,20241225,20241226,20241227,20221230",
-          course.startTime
+          course.startTime,
         )}`,
       ],
       reminders: {
         useDefault: isNotificationsEnabled,
       },
-      colorId: getColorId(extractSectionCode(course.name)?.[0] || "", course.colorId),
+      colorId: getColorId(
+        extractSectionCode(course.name)?.[0] || "",
+        course.colorId,
+      ),
     };
 
     batchString += JSON.stringify(eventData);
@@ -198,7 +200,7 @@ export function generateBatchString(
     batchCount++;
   }
 
-  batchString += `--${batchBoundary}--`;
+  batchString += `--${boundary}--`;
 
   console.log(batchString);
 

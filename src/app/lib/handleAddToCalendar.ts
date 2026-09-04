@@ -9,15 +9,18 @@ export async function handleAddToCalendar(
   courses: TCourse[],
   isNotificationsEnabled: boolean,
   inENCA: boolean,
-  calendarId: string = "primary"
+  calendarId: string = "primary",
 ) {
+  const boundary =
+    batchBoundary ||
+    `batch_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const fetchOptions = {
     method: "POST",
     headers: {
       Authorization: `Bearer ${authToken}`,
-      "Content-Type": `multipart/mixed; boundary=batch${batchBoundary}`,
+      "Content-Type": `multipart/mixed; boundary=${boundary}`,
       "Accept-Encoding": "gzip, deflate, br",
-      Accept: "*/*",
+      Accept: "application/json",
       Connection: "keep-alive",
     },
     body: await generateBatchString(
@@ -25,21 +28,22 @@ export async function handleAddToCalendar(
       authToken,
       isNotificationsEnabled,
       inENCA,
-      calendarId
+      calendarId,
+      boundary,
     ),
   };
 
   try {
     const response = await fetch(
       "https://content.googleapis.com/batch/calendar/v3",
-      fetchOptions
+      fetchOptions,
     );
 
     // Check if the response is okay (status 200-299)
     if (!response.ok) {
       // If the response is not okay, log the status and status text
       console.error(
-        `HTTP error! status: ${response.status} ${response.statusText}`
+        `HTTP error! status: ${response.status} ${response.statusText}`,
       );
       const text = await response.text();
       console.error("Error response body:", text);

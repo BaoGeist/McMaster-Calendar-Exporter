@@ -226,20 +226,10 @@ const Homepage = () => {
           <span className="text-xl text-primary">2</span> Google Calendar
         </h1>
 
-        <Alert variant="destructive" className="mb-4 mt-4">
+        <Alert variant="default" className="mb-4 mt-4">
           <TriangleAlert className="h-4 w-4" />
-          <AlertTitle>Notice</AlertTitle>
           <AlertDescription>
-            This tool is no longer being maintained. Please use{" "}
-            <a
-              href="https://www.maketheseat.ca/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline font-medium"
-            >
-              maketheseat.ca
-            </a>
-            .
+            This tool no longer has a purchased domain, but still works!
           </AlertDescription>
         </Alert>
 

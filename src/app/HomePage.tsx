@@ -358,12 +358,9 @@ const Homepage = () => {
                     title="Example Highlight"
                     className="w-[1200px]"
                     trigger={
-                      <>
-                        <Button variant="link" className="inline p-0 h-fit">
-                          picture here
-                        </Button>
-                        .
-                      </>
+                      <Button variant="link" className="inline p-0 h-fit">
+                        picture here
+                      </Button>
                     }
                   >
                     <div className="">
@@ -375,6 +372,7 @@ const Homepage = () => {
                       />
                     </div>
                   </Modal>
+                  .
                 </CardDescription>
               </CardHeader>
               <CardContent>

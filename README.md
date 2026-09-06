@@ -2,6 +2,8 @@
 
 A web application developed to help McMaster University students export their course schedules to Google Calendar after the university discontinued its official tool.
 
+The live domain has not been retired but the tool is still up at https://mc-master-calendar-exporter.vercel.app/
+
 ## Features
 - Export McMaster course schedules to Google Calendar
 - OAuth 2.0 authentication for secure Google API integration

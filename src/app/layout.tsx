@@ -6,8 +6,40 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "mac2cal",
-  description: "Convert your McMaster course schedule to Google Calendar",
+  metadataBase: new URL("https://mc-master-calendar-exporter.vercel.app"),
+  title: {
+    default: "McMaster Google Calendar Exporter | mac2cal",
+    template: "%s | mac2cal",
+  },
+  description:
+    "Export your McMaster University class schedule to Google Calendar in a few steps.",
+  keywords: [
+    "McMaster Google Calendar",
+    "McMaster calendar exporter",
+    "McMaster schedule to Google Calendar",
+    "McMaster timetable Google Calendar",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "McMaster Google Calendar Exporter",
+    description:
+      "Export your McMaster University class schedule to Google Calendar.",
+    siteName: "mac2cal",
+  },
+  twitter: {
+    card: "summary",
+    title: "McMaster Google Calendar Exporter",
+    description:
+      "Export your McMaster University class schedule to Google Calendar.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

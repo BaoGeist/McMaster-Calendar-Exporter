@@ -222,8 +222,8 @@ const Homepage = () => {
     <div className="flex flex-col items-center">
       <main className="mt-16 max-w-[60%] mx-4 mb-16">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-          <span className="text-primary">McMaster</span> Schedule{" "}
-          <span className="text-xl text-primary">2</span> Google Calendar
+          <span className="text-primary">McMaster</span> Google Calendar
+          Exporter
         </h1>
 
         <Alert variant="default" className="mb-4 mt-4">

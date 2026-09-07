@@ -23,7 +23,7 @@ const Page = () => {
             </Link>
           </Button>
           <Button variant="secondary">
-            <Link href="https://www.mac2cal.com/privacy">Privacy Policy</Link>
+            <Link href="/privacy">Privacy Policy</Link>
           </Button>
         </div>
       </div>
